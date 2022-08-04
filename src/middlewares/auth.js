@@ -20,8 +20,7 @@ const authMiddleware = (req, res, next) => {
       error
     })
   }
-  console.log("token", token)
-  console.log("verify-token", verifyToken)
+ 
   if (!token || !verifyToken.USER_ID) {
     return res.status(401).send({
       error: "token invalido."
@@ -40,7 +39,7 @@ const authMiddleware = (req, res, next) => {
 
     req.user = {
       ...results[0],
-      PASSWORD: undefined
+      password: undefined
     }
 
     next()

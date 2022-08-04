@@ -7,7 +7,9 @@ const authMiddleware = require("../middlewares/auth")
 const multer = require("multer")
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "src/uploads")
+    console.log(req.user)
+    const userDir = req.user.personal_dir
+    cb(null, `src/uploads/${userDir}`)
   },
 
   filename: function (req, file, cb) {
@@ -32,7 +34,9 @@ router.post(
   "/upload",
   authMiddleware,
   upload.array("files", 12),
-  Upload
+  (req, res) => {
+    res.send("ok")
+  }
 )
 
 module.exports = router

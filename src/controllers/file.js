@@ -3,7 +3,7 @@ function Upload(req, res) {
   const files = req.files
   const user = req.user
 
-  console.log(files)
+  console.log(user)
 
   // if (!user) return res.status(500).send({
   //   error: "no has iniciado sesion."
