@@ -1,10 +1,16 @@
+// Imports
 const validateEmail = require("../helpers/validateEmail")
-const connection = require("../database")
 const SHA256 = require('crypto-js/sha256')
 const jwt = require('jsonwebtoken');
 
+// Services
+const { createDir } = require("../services/dirService")
+
+// Initializations
+const connection = require("../database")
+
 function SignUp(req, res) {
-  const { first_name, last_name, email, password } = req.body
+  const { first_name, last_name, email, password, avatar } = req.body
 
   if (!first_name || !last_name || !email || !password) {
     return res.status(500).send({
@@ -39,9 +45,11 @@ function SignUp(req, res) {
       error: "estas credenciales ya estan en uso."
     })
 
-    const parameters = "user_id, first_name, last_name, email, password"
-    const values = `NULL, "${first_name}", "${last_name}", "${email}", "${hash}"`
+    const nameDir = `${first_name}-${Date.now()}`
+    const parameters = "user_id, first_name, last_name, avatar, personal_dir, email, password"
+    const values = `NULL, "${first_name}", "${last_name}", NULL, "${nameDir}", "${email}", "${hash}"`
     const query = `INSERT INTO USERS (${parameters}) VALUES (${values})`
+    createDir(nameDir)
 
     connection.query(query, (error, results) => {
       if (error) return res.status(500).send({
@@ -80,7 +88,7 @@ function SignIn(req, res) {
     })
 
     if (!match[0]) return res.status(500).send({
-      error: "estas credenciales no estan registradas.", 
+      error: "estas credenciales no estan registradas.",
       email,
       password
     })
