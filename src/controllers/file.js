@@ -1,28 +1,28 @@
-const path = require("path")
-
 function Upload(req, res) {
   console.log(req.files)
   const files = req.files
   const user = req.user
 
-  if (!user) return res.status(500).send({
-    error: "no has iniciado sesion."
-  })
+  console.log(files)
 
-  if (!files) return res.status(500).send({
-    error: "no hay archivos para subir"
-  })
+  // if (!user) return res.status(500).send({
+  //   error: "no has iniciado sesion."
+  // })
 
-  const fileNames = files.files.map(file => {
-    file.mv(`./src/uploads/${file.name}`)
+  // if (!files) return res.status(500).send({
+  //   error: "no hay archivos para subir"
+  // })
 
-    return file.name
-  })
+  // const fileNames = files.files.map(file => {
+  //   file.mv(`./src/uploads/${file.name}`)
 
-  return res.status(200).send({
-    message: "Subida exitosa, tus archivos se han subido!",
-    fileNames
-  })
+  //   return file.name
+  // })
+
+  // return res.status(200).send({
+  //   message: "Subida exitosa, tus archivos se han subido!",
+  //   fileNames
+  // })
 }
 
 module.exports = {
