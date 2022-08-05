@@ -1,28 +1,46 @@
+const connection = require("../database")
+
 function Upload(req, res) {
-  console.log(req.files)
   const files = req.files
-  const user = req.user
+  const userId = req.user.user_id
+  const personalDir = req.user.personal_dir
 
-  console.log(user)
+  console.log(userId)
+  console.log(files)
+  if (!userId) return res.status(500).send({
+    error: "no has iniciado sesion."
+  })
 
-  // if (!user) return res.status(500).send({
-  //   error: "no has iniciado sesion."
-  // })
+  if (!files) return res.status(500).send({
+    error: "no hay archivos para subir."
+  })
 
-  // if (!files) return res.status(500).send({
-  //   error: "no hay archivos para subir"
-  // })
+  files.map(file => {
+    if (file.size > 10485760)
+      return res.status(500).send({
+        error: "el archivo supera el limite de tamaño."
+      })
 
-  // const fileNames = files.files.map(file => {
-  //   file.mv(`./src/uploads/${file.name}`)
+    const parameters = "file_id, user_id, file_name, path"
+    const values = `NULL, ${userId}, "${file.originalname}", "${personalDir}"`
+    const query = `INSERT INTO files (${parameters}) VALUES (${values})`
 
-  //   return file.name
-  // })
+    connection.query(query, (error, results) => {
+      if (error)
+        return res.status(500).send({
+          error
+        })
 
-  // return res.status(200).send({
-  //   message: "Subida exitosa, tus archivos se han subido!",
-  //   fileNames
-  // })
+      if (!results || results.length < 1)
+        return res.status(500).send({
+          error: "error en la peticion."
+        })
+
+      return res.status(200).send({
+        message: "subida existosa!"
+      })
+    })
+  })
 }
 
 module.exports = {

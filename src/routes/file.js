@@ -34,9 +34,7 @@ router.post(
   "/upload",
   authMiddleware,
   upload.array("files", 12),
-  (req, res) => {
-    res.send("ok")
-  }
+  Upload
 )
 
 module.exports = router
