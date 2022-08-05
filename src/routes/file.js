@@ -9,7 +9,7 @@ const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     console.log(req.user)
     const userDir = req.user.personal_dir
-    cb(null, `src/uploads/${userDir}`)
+    cb(null, userDir)
   },
 
   filename: function (req, file, cb) {

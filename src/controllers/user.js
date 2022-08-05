@@ -45,7 +45,7 @@ function SignUp(req, res) {
       error: "estas credenciales ya estan en uso."
     })
 
-    const nameDir = `${first_name}-${Date.now()}`
+    const nameDir = `${process.env.UPLOAD_DIR}${first_name}-${Date.now()}/`
     const parameters = "user_id, first_name, last_name, avatar, personal_dir, email, password"
     const values = `NULL, "${first_name}", "${last_name}", NULL, "${nameDir}", "${email}", "${hash}"`
     const query = `INSERT INTO USERS (${parameters}) VALUES (${values})`
