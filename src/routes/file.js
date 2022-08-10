@@ -4,6 +4,7 @@ const { Upload, sendFile } = require("../controllers/file")
 
 // Middlewares
 const authMiddleware = require("../middlewares/auth")
+const verifyCurrentDirMiddleware = require("../middlewares/verifyCurrentDir")
 const multer = require("multer")
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -35,8 +36,9 @@ router.get(
 )
 
 router.post(
-  "/upload",
+  "/upload/:current_dir?",
   authMiddleware,
+  verifyCurrentDirMiddleware,
   upload.array("files", 12),
   Upload
 )
