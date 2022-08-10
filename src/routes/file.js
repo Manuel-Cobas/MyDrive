@@ -1,6 +1,6 @@
 // Imports
 const express = require("express")
-const { Upload } = require("../controllers/file")
+const { Upload, sendFile } = require("../controllers/file")
 
 // Middlewares
 const authMiddleware = require("../middlewares/auth")
@@ -22,12 +22,16 @@ const storage = multer.diskStorage({
 
 // Initializations
 const router = express.Router()
-const upload = multer({ storage })
+const upload = multer({
+  storage, limits: {
+    fileSize: 10485760
+  }
+})
 
 router.get(
-  "/",
+  "/:file_name",
   authMiddleware,
-  (req, res) => res.send("file")
+  sendFile
 )
 
 router.post(
