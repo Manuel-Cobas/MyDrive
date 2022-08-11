@@ -4,7 +4,7 @@ const SHA256 = require('crypto-js/sha256')
 const jwt = require('jsonwebtoken');
 
 // Services
-const { createDir } = require("../services/dirService")
+const createDir = require("../helpers/createDir")
 
 // Initializations
 const connection = require("../database")

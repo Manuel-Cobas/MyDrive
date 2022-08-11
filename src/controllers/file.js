@@ -7,20 +7,20 @@ function Upload(req, res) {
   const userId = req.user.user_id
   const personalDir = req.user.personal_dir
   const { exists, currentDir } = req.current_dir
-  console.log(files)
+  console.log("current DIRRR", currentDir, files)
   if (!userId)
     return res.status(500).send({
       error: "no has iniciado sesion."
     })
 
-  if (!files)
+  if (!files || files.length < 1)
     return res.status(500).send({
       error: "no hay archivos para subir."
     })
 
   files.map(async file => {
-    const parameters = "file_id, user_id, file_name, path"
-    const values = `NULL, ${userId}, "${file.filename}", "${personalDir + currentDir ? currentDir : ''}"`
+    const parameters = "file_id, user_id, file_name, path, parent_directory"
+    const values = `NULL, ${userId}, "${file.filename}", "${personalDir}${currentDir ? currentDir : ''}${file.filename}", null`
     const query = `INSERT INTO files (${parameters}) VALUES (${values})`
 
     connection.query(query, (error, results) => {
@@ -38,7 +38,7 @@ function Upload(req, res) {
     if (currentDir && exists)
       await fse.move(
         personalDir + file.filename,
-        personalDir + `${currentDir}/` + file.filename
+        personalDir + currentDir + file.filename
       )
         .then()
         .catch((error) => res.status(500).send({ error }))
